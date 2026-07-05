@@ -136,10 +136,17 @@ VITE_API_URL=http://localhost:5000/api
 
 ### Frontend (Vercel)
 
-1. Import project on Vercel
-2. Set root directory to `frontend`
-3. Add `VITE_API_URL` pointing to your Render backend URL
-4. Deploy
+This repo includes a root `vercel.json` for monorepo deployment (frontend + backend as separate services).
+
+1. Import the repository on Vercel
+2. Leave **Root Directory** as `.` (repository root) — do not set it to `frontend`
+3. Vercel reads `vercel.json` at the repo root and builds `frontend/`
+4. In Vercel → **Settings → Environment Variables**, add:
+   - `VITE_API_URL` = your Render backend URL + `/api` (e.g. `https://your-app.onrender.com/api`)
+5. In root `vercel.json`, replace `YOUR_RENDER_BACKEND_URL` with the same Render host (no trailing slash) so `/api` requests can proxy to the backend
+6. Deploy
+
+**Alternative:** deploy only the frontend folder by setting Root Directory to `frontend` and using `frontend/vercel.json` (SPA rewrites only). Set `VITE_API_URL` to your Render API URL.
 
 ### MongoDB Atlas
 

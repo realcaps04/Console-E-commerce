@@ -45,11 +45,15 @@ const HomePage = () => {
               </Link>
             </div>
 
-            <div className="hidden lg:block aspect-[4/3] rounded-lg overflow-hidden bg-surface">
+            <div className="hidden lg:block aspect-[4/3] rounded-lg overflow-hidden bg-surface border border-border">
               <img
-                src="https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=800&q=80"
-                alt=""
+                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=85&auto=format&fit=crop"
+                srcSet="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=85&auto=format&fit=crop 600w, https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=85&auto=format&fit=crop 1200w"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                alt="Console store interior"
                 className="w-full h-full object-cover"
+                loading="eager"
+                decoding="async"
               />
             </div>
           </div>

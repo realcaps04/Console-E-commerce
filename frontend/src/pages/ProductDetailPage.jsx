@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { FiStar, FiShoppingCart, FiHeart, FiMinus, FiPlus } from 'react-icons/fi';
+import { FiStar, FiHeart, FiMinus, FiPlus } from 'react-icons/fi';
 import { fetchProduct, clearProduct } from '../redux/slices/productSlice';
 import { addToCart } from '../redux/slices/cartSlice';
 import { authAPI, analyticsAPI } from '../api/services';
@@ -214,10 +214,10 @@ const ProductDetailPage = () => {
 
       {recommendations.length > 0 && (
         <section className="mt-16">
-          <h2 className="text-2xl font-display font-bold mb-6">Customers Also Bought</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {recommendations.map((p, i) => (
-              <ProductCard key={p._id} product={p} index={i} />
+          <h2 className="text-lg font-semibold mb-6">Often bought together</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+            {recommendations.map((p) => (
+              <ProductCard key={p._id} product={p} />
             ))}
           </div>
         </section>
