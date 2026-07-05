@@ -39,15 +39,15 @@ const ContactPage = () => {
         <div className="lg:col-span-2 space-y-6 text-sm text-muted">
           <div>
             <p className="font-medium text-ink mb-1">Email</p>
-            <p>support@consoleecommerce.com</p>
+            <p>consoleprojectsonline@gmail.com</p>
           </div>
           <div>
             <p className="font-medium text-ink mb-1">Phone</p>
-            <p>+91 98765 43210</p>
+            <p>+91 7510483455</p>
           </div>
           <div>
             <p className="font-medium text-ink mb-1">Address</p>
-            <p>123 Premium Avenue, Tech Park<br />Bangalore 560001, India</p>
+            <p>123 Premium Avenue, Tech Park<br />Idukki, Kerala India 685515, India</p>
           </div>
         </div>
 

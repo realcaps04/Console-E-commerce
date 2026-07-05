@@ -42,9 +42,20 @@ app.use(
   })
 );
 
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin || allowedOrigins[0]);
+      } else {
+        callback(new Error(`CORS blocked for origin: ${origin}`));
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
