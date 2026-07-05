@@ -107,8 +107,11 @@ CLOUDINARY_API_SECRET=
 ### Frontend (.env)
 
 ```env
+# Local development only
 VITE_API_URL=http://localhost:5000/api
 ```
+
+On Vercel, **do not** set `VITE_API_URL` to a placeholder. Production builds use `/api` (proxied via `vercel.json`).
 
 ## API Endpoints
 
@@ -127,24 +130,35 @@ VITE_API_URL=http://localhost:5000/api
 
 ### Backend (Render)
 
-1. Create a new Web Service on Render
-2. Connect your GitHub repository
-3. Set root directory to `backend`
-4. Build command: `npm install`
-5. Start command: `npm start`
-6. Add environment variables from `.env.example`
+1. Go to [render.com](https://render.com) → **New** → **Web Service**
+2. Connect your GitHub repo
+3. **Root Directory:** `backend`
+4. **Build Command:** `npm install`
+5. **Start Command:** `npm start`
+6. Add environment variables (copy from your local `backend/.env`):
+   - `MONGO_URI` — your Atlas connection string
+   - `JWT_SECRET` — a long random string
+   - `JWT_REFRESH_SECRET` — another long random string
+   - `CLIENT_URL` — `https://console-e-commerce-avob.vercel.app,http://localhost:5173`
+   - `NODE_ENV` — `production`
+7. Deploy and copy your Render URL (e.g. `https://console-ecommerce-api.onrender.com`)
+8. After deploy, run seed once from Render Shell or locally against Atlas:
+   ```bash
+   cd backend && npm run seed
+   ```
 
 ### Frontend (Vercel)
 
 1. Import the repository on Vercel
 2. **Settings → General → Root Directory:** set to `frontend` and save
-3. **Settings → Build & Development:** turn **OFF** any overrides for Install / Build / Output, or set them exactly to:
-   - Install Command: `npm install`
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
-4. Replace `YOUR_RENDER_BACKEND_URL` in `frontend/vercel.json` with your Render backend host (no trailing slash)
-5. Add environment variable `VITE_API_URL` = `https://your-app.onrender.com/api`
-6. Redeploy
+3. **Settings → Environment Variables:** **remove** any `VITE_API_URL` that points to `your-backend.onrender.com` or other placeholders. Production uses `/api` automatically.
+4. Edit `frontend/vercel.json` — replace `REPLACE-WITH-YOUR-RENDER-APP` with your actual Render hostname (no trailing slash):
+   ```json
+   "destination": "https://console-ecommerce-api.onrender.com/api/:path*"
+   ```
+5. Commit, push, and redeploy
+
+**Why `/api` proxy?** The browser calls your Vercel domain (`/api/...`), and Vercel forwards to Render. Same-origin requests avoid CORS entirely — no wildcard `*` issues with credentials.
 
 If the build log still shows `npm install --prefix frontend`, the dashboard override was not cleared — that command only works when Root Directory is the repo root, not `frontend`.
 
