@@ -137,13 +137,16 @@ VITE_API_URL=http://localhost:5000/api
 ### Frontend (Vercel)
 
 1. Import the repository on Vercel
-2. Set **Root Directory** to `frontend`
-3. Replace `YOUR_RENDER_BACKEND_URL` in `frontend/vercel.json` with your Render backend host (no trailing slash)
-4. In Vercel → **Settings → Environment Variables**, add:
-   - `VITE_API_URL` = your Render backend URL + `/api` (e.g. `https://your-app.onrender.com/api`)
-5. Deploy — Vercel runs `npm install` and `npm run build` inside `frontend/` automatically
+2. **Settings → General → Root Directory:** set to `frontend` and save
+3. **Settings → Build & Development:** turn **OFF** any overrides for Install / Build / Output, or set them exactly to:
+   - Install Command: `npm install`
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+4. Replace `YOUR_RENDER_BACKEND_URL` in `frontend/vercel.json` with your Render backend host (no trailing slash)
+5. Add environment variable `VITE_API_URL` = `https://your-app.onrender.com/api`
+6. Redeploy
 
-Do **not** add a root-level `vercel.json` with `--prefix frontend` if Root Directory is already `frontend` (that causes a `frontend/frontend` path error).
+If the build log still shows `npm install --prefix frontend`, the dashboard override was not cleared — that command only works when Root Directory is the repo root, not `frontend`.
 
 ### MongoDB Atlas
 
