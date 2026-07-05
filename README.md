@@ -151,9 +151,20 @@ If the build log still shows `npm install --prefix frontend`, the dashboard over
 ### MongoDB Atlas
 
 1. Create a free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas)
-2. Create a database user
-3. Whitelist IP `0.0.0.0/0` for development
-4. Copy connection string to `MONGO_URI`
+2. Create a database user (e.g. `adminconsole`) with a password
+3. **Network Access** → add `0.0.0.0/0` (or your IP) so Atlas accepts connections
+4. In `backend/.env`, set `MONGO_URI` — replace `YOUR_PASSWORD` with your real password:
+
+```env
+MONGO_URI=mongodb+srv://adminconsole:YOUR_PASSWORD@cluster0.njmaucf.mongodb.net/console_ecommerce?retryWrites=true&w=majority&appName=Cluster0
+```
+
+5. Seed the database:
+
+```bash
+cd backend
+npm run seed
+```
 
 ## License
 

@@ -1,12 +1,10 @@
-import dotenv from 'dotenv';
+import '../config/env.js';
 import User from '../models/User.js';
 import Category from '../models/Category.js';
 import Brand from '../models/Brand.js';
 import Product from '../models/Product.js';
 import Coupon from '../models/Coupon.js';
 import connectDB from '../config/db.js';
-
-dotenv.config();
 
 const categories = [
   { name: 'Electronics', description: 'Latest gadgets and devices' },
@@ -122,7 +120,7 @@ const products = [
 
 const seedDatabase = async () => {
   try {
-    await connectDB();
+    await connectDB({ retry: false });
 
     await Promise.all([
       User.deleteMany(),
@@ -149,8 +147,8 @@ const seedDatabase = async () => {
       },
     ]);
 
-    const createdCategories = await Category.insertMany(categories);
-    const createdBrands = await Brand.insertMany(brands);
+    const createdCategories = await Category.create(categories);
+    const createdBrands = await Brand.create(brands);
 
     const productsWithRefs = products.map((product, index) => ({
       ...product,
@@ -161,7 +159,7 @@ const seedDatabase = async () => {
       soldCount: Math.floor(Math.random() * 200) + 10,
     }));
 
-    await Product.insertMany(productsWithRefs);
+    await Product.create(productsWithRefs);
 
     await Coupon.create({
       code: 'CONSOLE10',

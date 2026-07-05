@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import './config/env.js';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -12,6 +12,7 @@ import fs from 'fs';
 
 import connectDB from './config/db.js';
 import errorHandler from './middleware/errorHandler.js';
+import { requireDb, isDbConnected } from './middleware/requireDb.js';
 import { AppError } from './utils/apiResponse.js';
 
 import authRoutes from './routes/authRoutes.js';
@@ -20,8 +21,6 @@ import orderRoutes from './routes/orderRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,17 +76,18 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Console Ecommerce API is running',
+    database: isDbConnected() ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
   });
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/cart', cartRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/analytics', analyticsRoutes);
+app.use('/api/auth', requireDb, authRoutes);
+app.use('/api/products', requireDb, productRoutes);
+app.use('/api/orders', requireDb, orderRoutes);
+app.use('/api/cart', requireDb, cartRoutes);
+app.use('/api/contact', requireDb, contactRoutes);
+app.use('/api/analytics', requireDb, analyticsRoutes);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Route ${req.originalUrl} not found`, 404));
