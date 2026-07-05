@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 
 import connectDB from './config/db.js';
+import { corsOptions, logAllowedOrigins } from './config/cors.js';
 import errorHandler from './middleware/errorHandler.js';
 import { requireDb, isDbConnected } from './middleware/requireDb.js';
 import { AppError } from './utils/apiResponse.js';
@@ -42,25 +43,7 @@ app.use(
   })
 );
 
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, origin || allowedOrigins[0]);
-      } else {
-        callback(new Error(`CORS blocked for origin: ${origin}`));
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+app.use(cors(corsOptions));
 
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
@@ -109,6 +92,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
+  logAllowedOrigins();
   console.log(`Console Ecommerce Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
 });
 
